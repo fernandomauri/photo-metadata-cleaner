@@ -5,6 +5,7 @@ Purpose: The following program is meant to do very simple image duplication in w
 """
 
 import os
+import sys
 import time
 
 from spinner import loading
@@ -71,16 +72,16 @@ def check_path(image_path):
     return path_type
 
 
-def is_d(dir):
+def scrub_directory(directory):
     """
     Traverse the directory contents and scrub each image file individually with other functions.
     """
     print("The path you entered is a directory. Scrubbing metadata from its contents...")
-    dir = os.listdir(dir)
+    directory = os.listdir(directory)
     try:
-        for item in dir:
-            print(item)
-            is_f(item)
+        for file in directory:
+            print(file)
+            check_and_scrub_file(file)
             loading()
     except Exception as e:
         print(f"Exception occurred while scrubbing directory items\' metadata. Error => {e}")
@@ -90,9 +91,9 @@ def is_d(dir):
         return
 
 
-def is_f(image_file):
+def check_and_scrub_file(image_file):
     """
-    
+    Before going through the process of trying to duplicate the image file, we want to make sure that it's the right file type. Otherwise, Pillow will try to work on unsupported file types and produce errors.
     """
     try:
         if is_valid_filetype(image_file):
@@ -126,14 +127,14 @@ def main():
     file_or_dir = check_path(image_path)
     if file_or_dir == "dir":
         os.chdir(image_path)
-        is_d(image_path)
+        scrub_directory(image_path)
     else:
         try:
-            is_f(file_or_dir)
-        except OSError:
-            print("Unable to load image.")
+            check_and_scrub_file(file_or_dir)
+        except Exception as e:
+            print(f"Unable to load image. Error => {e}")
 
 
 if __name__ == "__main__":
     main()
-    #sys.exit(0)
+    sys.exit(0)
