@@ -12,4 +12,4 @@ jobs:
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag metadata-cleaner:${{ github.run_id }}
     - name: Build Container
-      run: docker run --name metadata-cleaner:${{ github.sha }} metadata-cleaner:${{ github.run_id }}
+      run: docker run --name metadata-cleaner metadata-cleaner:${{ github.run_id }}
