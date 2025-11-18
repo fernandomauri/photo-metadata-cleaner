@@ -6,7 +6,7 @@ on:
   workflow_call:
     outputs: 
       docker_image: 
-        value: ${{ steps.image_name.outputs.DOCKER_IMAGE }}
+        value: ${{ jobs.build_image.outputs.docker_image }}
   
 jobs:
   build_image:
