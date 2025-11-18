@@ -5,12 +5,16 @@ Purpose: The following program is meant to do very simple image duplication in w
 """
 
 import os
-import sys
 import time
+import logging
 
 from spinner import loading
 
 from PIL import Image
+
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(filename="run_history.log", format="%(asctime)s %(levelname)s %(funcName)s %(message)s", level=logging.INFO, filemode="w")
 
 
 def get_format(image_file):
@@ -52,9 +56,10 @@ def scrub_image(image_file):
         scrubbed_image.putdata(pixels)
         scrubbed_image.save(f"{image_file[:image_file.index('.')]}-SCRUBBED{format}")
     except Exception as e:
-        print(f"Oh no! Image `{image_file}` could not be scrubbed. Error => {e}")
+        logger.exception(f"Oh no! Image `{image_file}` could not be scrubbed. Error => {e}")
+        raise
     else:
-        print(f"Metadata for photo `{image_file}` has been successfully scrubbed.")
+        logger.info(f"Metadata for photo `{image_file}` has been successfully scrubbed.")
 
 
 def check_path(image_path):
@@ -80,14 +85,14 @@ def scrub_directory(directory):
     directory = os.listdir(directory)
     try:
         for file in directory:
-            print(file)
+            logger.info(f"Working on {file} in directory {directory}...")
             check_and_scrub_file(file)
             loading()
     except Exception as e:
-        print(f"Exception occurred while scrubbing directory items\' metadata. Error => {e}")
+        logger.exception(f"Exception occurred while scrubbing directory items\' metadata. Error => {e}")
         raise
     else:
-        print("Success! Directory scrub complete.")
+        logger.info("Success! Directory scrub complete.")
         return
 
 
@@ -98,11 +103,10 @@ def check_and_scrub_file(image_file):
     try:
         if is_valid_filetype(image_file):
             scrub_image(image_file)
-            time.sleep(1)
         else:
             return
     except Exception as e:
-        print(f"Whoops! There was an error while loading image file => {e}")
+        logger.exception(f"Whoops! There was an error while loading image file => {e}")
         raise
     else:
         return
@@ -132,9 +136,11 @@ def main():
         try:
             check_and_scrub_file(file_or_dir)
         except Exception as e:
-            print(f"Unable to load image. Error => {e}")
+            logger.exception(f"Unable to load image. Error => {e}")
+            raise
+        else:
+            logger.info("Success!")
 
 
 if __name__ == "__main__":
     main()
-    sys.exit(0)
