@@ -1,0 +1,15 @@
+name: Building Docker Container
+on:
+  push:
+    branches: 
+      - 'main'
+jobs:
+  build_image:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout to main
+      uses: actions/checkout@v4
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag metadata-cleaner:${{ github.run_id }}
+    - name: Build Container
+      run: docker run --name metadata-cleaner:${{ github.sha }} metadata-cleaner:${{ github.run_id }}
