@@ -3,11 +3,18 @@ on:
   push:
     branches: 
       - 'main'
+  workflow_call:
+    outputs: 
+      docker_image: 
+        value: ${{ jobs.build_image.outputs.DOCKER_IMAGE }}
+  
 jobs:
   build_image:
     runs-on: ubuntu-latest
+    outputs:
+      DOCKER_IMAGE: metadata-cleaner:${{ github.run_id }}
     steps:
     - name: Checkout to main
       uses: actions/checkout@v4
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag metadata-cleaner:${{ github.run_id }}
+      run: docker build . --file Dockerfile --tag $DOCKER_IMAGE
