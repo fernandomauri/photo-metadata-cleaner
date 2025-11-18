@@ -6,7 +6,7 @@ on:
   workflow_call:
     outputs: 
       docker_image: 
-        value: ${{ jobs.build_image.outputs.DOCKER_IMAGE }}
+        value: ${{ steps.image_name.outputs.DOCKER_IMAGE }}
   
 jobs:
   build_image:
@@ -16,5 +16,10 @@ jobs:
     steps:
     - name: Checkout to main
       uses: actions/checkout@v4
+    - name: Set Docker image name variable
+      id: image_name
+      run: |
+        IMAGE=metadata-cleaner:${{ github.run_id }}
+        echo "docker_image=$IMAGE" >> $GITHUB_OUTPUT
     - name: Build the Docker image
       run: docker build --tag $DOCKER_IMAGE .
