@@ -1,0 +1,13 @@
+name: Build Docker Container
+on:
+  workflow_run:
+    workflows: ["Build Docker Image"]
+    types: completed
+jobs:
+  build_container:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout to working directory
+        uses: actions/checkout@v4
+      - name: Build container from image
+        run: docker run --name metadata-cleaner-container -d ${{ github.events.workflow_run.outputs.docker_image }}
