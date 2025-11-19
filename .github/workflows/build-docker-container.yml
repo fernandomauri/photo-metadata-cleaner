@@ -13,4 +13,4 @@ jobs:
       - name: Checkout to working directory
         uses: actions/checkout@v4
       - name: Build container from image
-        run: docker run --name metadata-cleaner-container -d ${{ github.job.get_image.outputs.docker_image }}
+        run: docker run --name metadata-cleaner-container -d ${{ job.get_image.outputs.docker_image }}
