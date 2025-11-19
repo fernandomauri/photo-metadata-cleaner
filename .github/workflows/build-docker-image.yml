@@ -22,4 +22,4 @@ jobs:
         IMAGE=metadata-cleaner:${{ github.run_id }}
         echo "docker_image=$IMAGE" >> $GITHUB_OUTPUT
     - name: Build the Docker image
-      run: docker build --tag ${{ steps.image_name.outputs.docker_image }}.
+      run: docker build --tag ${{ steps.image_name.outputs.docker_image }} .
