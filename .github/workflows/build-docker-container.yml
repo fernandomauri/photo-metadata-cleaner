@@ -4,13 +4,13 @@ on:
     workflows: ["Build Docker Image"]
     types: completed
 jobs:
+  get_image:
+    name: Gets Docker image from previous step
+    uses: fernandomauri/photo-metadata-cleaner/.github/workflows/build-docker-image.yml@main
   build_container:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout to working directory
         uses: actions/checkout@v4
-      - name: Reference previous workflow Build Docker Image
-        uses: fernandomauri/photo-metadata-cleaner/.github/workflows/build-docker-image.yml@main
-        id: workflow_variable
       - name: Build container from image
-        run: docker run --name metadata-cleaner-container -d ${{ steps.workflow_variable.outputs.docker_image }}
+        run: docker run --name metadata-cleaner-container -d ${{ jobs.get_image.outputs.docker_image }}
