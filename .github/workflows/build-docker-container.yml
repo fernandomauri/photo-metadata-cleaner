@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout to working directory
-        uses: actions/checkout@v4
+        needs: actions/checkout@v4
       - name: Reference previous workflow Build Docker Image
         uses: ./.github/workflows/build-docker-image.yml
         id: workflow_variable
