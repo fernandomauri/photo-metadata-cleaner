@@ -8,9 +8,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout to working directory
-        needs: actions/checkout@v4
+        uses: actions/checkout@v4
       - name: Reference previous workflow Build Docker Image
-        uses: ./.github/workflows/build-docker-image.yml
+        uses: fernandomauri/photo-metadata-cleaner/.github/workflows/build-docker-image.yml@main
         id: workflow_variable
       - name: Build container from image
         run: docker run --name metadata-cleaner-container -d ${{ steps.workflow_variable.outputs.docker_image }}
